@@ -33,3 +33,6 @@ Issues = "https://github.com/TopoToolbox/pytopotoolbox/issues"
 
 [tool.scikit-build]
 wheel.expand-macos-universal-tags = true
+
+[tool.scikit-build.cmake.define]
+CMAKE_CONFIGURATION_TYPES="Release"
