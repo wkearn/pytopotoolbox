@@ -47,6 +47,7 @@ jobs:
           CIBW_SKIP: "*musllinux*"
           CIBW_TEST_REQUIRES: pytest
           CIBW_TEST_COMMAND: pytest {package}/tests
+          CIBW_TEST_EXTRAS: opensimplex
 
       - uses: actions/upload-artifact@v4
         with:
