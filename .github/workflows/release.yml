@@ -29,9 +29,9 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, windows-latest, macos-13, macos-latest]
+        os: [ubuntu-latest, macos-latest]
         cibw_arch: ["native"]
-        cibw_build: ["cp310-* cp311-* cp312-* cp313-*"]
+        cibw_build: ["cp310-*"]
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
