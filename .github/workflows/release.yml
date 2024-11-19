@@ -68,11 +68,8 @@ jobs:
           pattern: cibw-*
           path: dist
           merge-multiple: true
-      - name: Generate artifact attestations
-        uses: actions/attest-build-provenance@v1.4.3
-        with:
-          subject-path: "dist/*"
       - uses: pypa/gh-action-pypi-publish@release/v1
         with:
           repository-url: https://test.pypi.org/legacy
           verbose: true
+          attestations: false
