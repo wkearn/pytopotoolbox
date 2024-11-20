@@ -9,7 +9,7 @@ requires = [
 
 [project]
 name = "topotoolbox"
-version = "3.0.13"
+version = "3.0.14"
 authors = [
     {name="Wolfgang Schwanghart", email="w.schwanghart@geo.uni-potsdam.de"},
     {name="Dirk Scherler", email="scherler@fz-potsdam.de"},
