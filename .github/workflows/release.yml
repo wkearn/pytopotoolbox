@@ -22,37 +22,6 @@ jobs:
         with:
           name: cibw-sdist
           path: dist/*.tar.gz
-
-  build_wheels:
-    name: Wheel on ${{ matrix.os }}
-    runs-on: ${{ matrix.os }}
-    strategy:
-      fail-fast: false
-      matrix:
-        os: [ubuntu-latest, macos-latest]
-        cibw_arch: ["native"]
-        cibw_build: ["cp310-*"]
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
-
-      - name: Install cibuildwheel
-        run: python -m pip install cibuildwheel==2.21.3
-
-      - name: Build wheels
-        run: python -m cibuildwheel --output-dir wheelhouse
-        env:
-          CIBW_ARCHS: ${{ matrix.cibw_arch }}
-          CIBW_BUILD: ${{ matrix.cibw_build }}
-          CIBW_SKIP: "*musllinux*"
-          CIBW_TEST_REQUIRES: pytest
-          CIBW_TEST_COMMAND: pytest {package}/tests
-          CIBW_TEST_EXTRAS: opensimplex
-
-      - uses: actions/upload-artifact@v4
-        with:
-          name: cibw-wheels-${{ matrix.os }}-${{ strategy.job-index }}
-          path: ./wheelhouse/*.whl
   upload_all:
     needs: [build_wheels, make_sdist]
     environment: testpypi
@@ -65,7 +34,7 @@ jobs:
     steps:
       - uses: actions/download-artifact@v4
         with:
-          pattern: cibw-*
+          pattern: cibw-dist
           path: dist
           merge-multiple: true
       - uses: pypa/gh-action-pypi-publish@release/v1
