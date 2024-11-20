@@ -54,6 +54,7 @@ jobs:
           path: ./wheelhouse/*.whl
   upload_assets:
     name: Upload release asset
+    needs: [build_wheels, make_sdist]
     runs-on: ubuntu-latest
     permissions:
       contents: write
