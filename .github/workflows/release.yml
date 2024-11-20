@@ -53,12 +53,13 @@ jobs:
           name: cibw-wheels-${{ matrix.os }}-${{ strategy.job-index }}
           path: ./wheelhouse/*.whl
   upload_assets:
-    name: Upload release asset
+    name: Upload release assets
     needs: [build_wheels, make_sdist]
     runs-on: ubuntu-latest
     permissions:
       contents: write
     steps:
+      - uses actions/checkout@v4
       - uses: actions/download-artifact@v4
         with:
           pattern: cibw-*
