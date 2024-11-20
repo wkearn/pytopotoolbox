@@ -37,8 +37,10 @@ jobs:
           pattern: cibw-sdist
           path: dist
           merge-multiple: true
-      - uses: pypa/gh-action-pypi-publish@release/v1
-        with:
-          repository-url: https://test.pypi.org/legacy
-          verbose: true
-          attestations: false
+      - name: Upload using twine
+        run:
+          python -m twine upload --verbose dist/*
+        env:
+          TWINE_USERNAME: __token__
+          TWINE_PASSWORD: ${{ secrets.TEST_PYPI_API_TOKEN }}
+          TWINE_REPOSITORY_URL: https://test.pypi.org/legacy

@@ -9,7 +9,7 @@ requires = [
 
 [project]
 name = "topotoolbox"
-version = "3.0.10"
+version = "3.0.11"
 authors = [
     {name="Wolfgang Schwanghart", email="w.schwanghart@geo.uni-potsdam.de"},
     {name="Dirk Scherler", email="scherler@fz-potsdam.de"},
@@ -20,7 +20,7 @@ description = "Python interface to TopoToolbox."
 readme = "README.md"
 license = { file = "LICENSE" }
 dependencies = [
-    "numpy>=2.0.0",
+    "numpy",
     "matplotlib",
     "rasterio"
 ]
