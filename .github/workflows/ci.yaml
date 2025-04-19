@@ -2,7 +2,7 @@ name: CI
 on:
   pull_request:    
   push:
-    branches: ["main"]
+    branches: ["main", "windows-conda"]
 jobs:
   build-and-test:
     runs-on: ${{ matrix.os }}
@@ -38,6 +38,21 @@ jobs:
         run: |
           pip install matplotlib scipy rasterio "numpy==1.23.5" --upgrade --upgrade-strategy eager
           pytest
+  conda-install:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup miniforge
+        uses: conda-incubator/setup-miniconda@v3
+        with:
+          activate-environment: tt3
+      - name: Conda info
+        shell: bash -eL {0}
+        run: conda info
+      - name: Conda list
+        shell: pwsh
+        run: conda list
   lint:
     runs-on: ubuntu-latest
     strategy:
