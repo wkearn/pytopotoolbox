@@ -56,7 +56,9 @@ jobs:
         shell: pwsh
         run: conda list
       - name: Install package
-        run: pip install .
+        run: pip install -r requirements.txt .
+      - name: Run tests
+        run: pytest
   lint:
     runs-on: ubuntu-latest
     strategy:
