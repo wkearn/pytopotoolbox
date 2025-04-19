@@ -49,6 +49,7 @@ jobs:
           activate-environment: tt3
           channels: conda-forge
           conda-remove-defaults: true
+          python-version: 3.11
       - name: Conda info
         shell: bash -el {0}
         run: conda info
