@@ -47,8 +47,10 @@ jobs:
         uses: conda-incubator/setup-miniconda@v3
         with:
           activate-environment: tt3
+          channels: conda-forge
+          conda-remove-defaults: true
       - name: Conda info
-        shell: bash -eL {0}
+        shell: bash -el {0}
         run: conda info
       - name: Conda list
         shell: pwsh
