@@ -2,7 +2,7 @@ name: CI
 on:
   pull_request:
   push:
-    branches: ["main"]
+    branches: ["main", "cvxopt-deps"]
 jobs:
   build-and-test:
     runs-on: ${{ matrix.os }}
