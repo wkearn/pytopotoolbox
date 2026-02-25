@@ -21,7 +21,6 @@ from .interface import validate_alignment
 from .stream_functions import imposemin
 
 # pylint: disable=no-name-in-module
-from . import _flow  # type: ignore
 from . import _stream  # type: ignore
 
 _all_ = ['StreamObject']
@@ -164,11 +163,17 @@ class StreamObject():
             threshold /= cell_area
 
             # Generate the flow accumulation matrix (acc)
-            acc = np.zeros(flow.shape, order='F', dtype=np.float32)
+
+            # NOTE(wkearn): We do not use `flow_accumulation` here
+            # because the numbering of stream indices is sensitive to
+            # the memory order, and our tests currently check that the
+            # . Always running the traversal on the 'F' order array
+            # produces identical stream.source and stream.target
+            # indices regardless of the memory order. This is
+            # confusing and should probably be fixed.
             fraction = np.ones_like(flow.source, dtype=np.float32)
-            weights = np.ones(flow.shape, order='F', dtype=np.float32)
-            _flow.flow_accumulation(
-                acc, flow.source, flow.target, fraction, weights, flow.shape)
+            acc = np.ones(flow.shape, order='F', dtype=np.float32)
+            _stream.traverse_down_f32_add_mul(acc, fraction, flow.source, flow.target)
 
             # Generate a 1D array that holds all indexes where more water than
             # in the required threshold is collected. (acc >= threshold)
