@@ -6,7 +6,6 @@ import numpy as np
 
 # pylint: disable=no-name-in-module
 from . import _grid  # type: ignore
-from . import _flow  # type: ignore
 from . import _stream  # type: ignore
 from .grid_object import GridObject
 from .interface import validate_alignment
@@ -305,8 +304,7 @@ class FlowObject():
         Parameters
         ----------
         outlets: np.ndarray
-            An array containing the linear indices of the outlet nodes
-            in column major ('F') order.
+            An array containing the linear indices of the outlet nodes.
 
         Returns
         -------
@@ -323,15 +321,14 @@ class FlowObject():
 
         """
         if outlets is None:
-            basins = np.zeros(self.shape, dtype=np.int64, order=self.order)
-            _flow.drainagebasins(basins, self.source, self.target, self.dims)
-        else:
-            basins = np.zeros(self.shape, dtype=np.uint32, order=self.order)
-            indices = self.unravel_index(outlets)
-            basins[indices] = np.arange(1, len(outlets) + 1, dtype=np.uint32)
-            weights = np.full(self.source.size, 0xffffffff, dtype=np.uint32)
-            _stream.traverse_up_u32_or_and(
-                basins, weights, self.source, self.target)
+            outlets = self.getoutlets()
+
+        basins = np.zeros(self.shape, dtype=np.uint32, order=self.order)
+        indices = self.unravel_index(outlets)
+        basins[indices] = np.arange(1, len(outlets) + 1, dtype=np.uint32)
+        weights = np.full(self.source.size, 0xffffffff, dtype=np.uint32)
+        _stream.traverse_up_u32_or_and(
+            basins, weights, self.source, self.target)
 
         result = GridObject()
         result.path = self.path

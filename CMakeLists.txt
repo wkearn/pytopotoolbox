@@ -21,8 +21,6 @@ find_package(pybind11 CONFIG REQUIRED)
 pybind11_add_module(_grid src/lib/grid.cpp)
 target_link_libraries(_grid PRIVATE topotoolbox)
 
-pybind11_add_module(_flow src/lib/flow.cpp)
-target_link_libraries(_flow PRIVATE topotoolbox)
 
 pybind11_add_module(_stream src/lib/stream.cpp)
 target_link_libraries(_stream PRIVATE topotoolbox)
@@ -33,4 +31,4 @@ target_link_libraries(_graphflood PRIVATE topotoolbox)
 pybind11_add_module(_morphology src/lib/morphology.cpp)
 target_link_libraries(_morphology PRIVATE topotoolbox)
 
-install(TARGETS _grid _flow _stream _graphflood _morphology LIBRARY DESTINATION topotoolbox)
+install(TARGETS _grid _stream _graphflood _morphology LIBRARY DESTINATION topotoolbox)
