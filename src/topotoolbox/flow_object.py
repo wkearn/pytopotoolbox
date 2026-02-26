@@ -252,14 +252,11 @@ class FlowObject():
         >>> acc = fd.flow_accumulation()
         >>> acc.plot(cmap='Blues',norm="log")
         """
-        acc = np.zeros(self.shape, dtype=np.float32, order=self.order)
-
-        w = self.ezgetnal(weights, dtype=np.float32)
+        acc = np.array(self.ezgetnal(weights, dtype=np.float32), copy=True, order=self.order)
 
         fraction = np.ones_like(self.source, dtype=np.float32)
 
-        _flow.flow_accumulation(
-            acc, self.source, self.target, fraction, w, self.shape)
+        _stream.traverse_down_f32_add_mul(acc, fraction, self.source, self.target)
 
         result = GridObject()
         result.path = self.path
