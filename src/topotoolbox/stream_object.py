@@ -116,7 +116,7 @@ class StreamObject():
 
         # If stream_pixels are provided, the stream can be generated based
         # on stream_pixels without the need for a threshold
-        w = np.zeros(flow.shape, dtype='bool', order='F').ravel(order='K')
+        w = np.zeros(flow.shape, dtype='bool', order=self._order).ravel(order='K')
         if stream_pixels is not None:
             if not validate_alignment(self, stream_pixels):
                 err = (
@@ -148,7 +148,7 @@ class StreamObject():
                         dtype=np.float32)
                 else:
                     threshold = np.full(
-                        self.shape, threshold, dtype=np.float32)
+                        self.shape, threshold, order=self._order, dtype=np.float32)
             else:
                 if not validate_alignment(self, threshold):
                     err = (
@@ -156,28 +156,18 @@ class StreamObject():
                         f"not match FlowObject shape: {self.shape}.")
                     raise ValueError(err) from None
 
-                threshold = np.asarray(threshold, dtype=np.float32, order='F')
+                threshold = np.asarray(threshold, dtype=np.float32, order=self._order)
 
             # Divide the threshold by how many m^2 or km^2 are in a cell to
             # convert the user input to pixels for further computation.
             threshold /= cell_area
 
             # Generate the flow accumulation matrix (acc)
-
-            # NOTE(wkearn): We do not use `flow_accumulation` here
-            # because the numbering of stream indices is sensitive to
-            # the memory order, and our tests currently check that the
-            # . Always running the traversal on the 'F' order array
-            # produces identical stream.source and stream.target
-            # indices regardless of the memory order. This is
-            # confusing and should probably be fixed.
-            fraction = np.ones_like(flow.source, dtype=np.float32)
-            acc = np.ones(flow.shape, order='F', dtype=np.float32)
-            _stream.traverse_down_f32_add_mul(acc, fraction, flow.source, flow.target)
+            acc = np.asarray(flow.flow_accumulation())
 
             # Generate a 1D array that holds all indexes where more water than
             # in the required threshold is collected. (acc >= threshold)
-            w = (acc >= threshold).ravel(order='F')
+            w = (acc >= threshold).ravel(order='K')
 
         # Indices of pixels in the stream network
         # This is a node attribute list
@@ -186,7 +176,7 @@ class StreamObject():
         # Find edges whose source pixel is in the stream network
         u = flow.source
         v = flow.target
-        d = flow.direction.ravel(order='F')
+        d = flow.direction.ravel(order='K')
 
         i = w[u]
 
