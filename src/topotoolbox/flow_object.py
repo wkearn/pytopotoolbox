@@ -271,6 +271,34 @@ class FlowObject():
 
         return result
 
+    def getoutlets(self):
+        """Extract outlets from a flow network.
+
+        These are defined as nodes that have no downstream neighbor in
+        the network. This includes any internal sinks as well as
+        outlets where flow exits the DEM.
+
+        Returns
+        -------
+        GridObject
+            A logical GridObject that is True for each node that is
+            considered an outlet. False otherwise.
+
+        Example
+        -------
+        >>> dem = topotoolbox.load_dem("bigtujunga")
+        >>> fd = topotoolbox.FlowObject(dem)
+        >>> outlets = fd.getoutlets()
+        >>> outlets.plot()
+
+        """
+        indegree = np.zeros(self.shape, order=self.order, dtype=np.uint8)
+        outdegree = np.zeros(self.shape, order=self.order, dtype=np.uint8)
+        _stream.edgelist_degree(indegree, outdegree, self.source, self.target)
+        output = (outdegree == 0) & (indegree > 0)
+
+        return np.nonzero(np.ravel(output, order='K'))[0]
+
     def drainagebasins(self, outlets=None):
         """Delineate drainage basins from a flow network.
 

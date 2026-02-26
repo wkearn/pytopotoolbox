@@ -330,3 +330,38 @@ def test_influence_map(order_dems):
     fd = ffd.influencemap(l_f)
 
     assert np.array_equal(cd, fd)
+
+def test_getoutlets(wide_dem):
+    # The outlets determined by FlowObject.getoutlets should be a
+    # superset of those determined by s.streampoi('outlets')
+
+    fd = topo.FlowObject(wide_dem)
+    s = topo.StreamObject(fd, threshold=1)
+
+    soutlets = s.streampoi('outlets')
+    sog = np.zeros(fd.shape, dtype=bool)
+    sog[s.node_indices_where(soutlets)] = True
+
+    foutlets = fd.getoutlets()
+    fog = np.zeros(fd.shape, dtype=bool)
+    fog[fd.unravel_index(foutlets)] = True
+
+    assert np.all(fog[sog])
+
+def test_getoutlets_order(order_dems):
+    # Identified outlets should be invariant of the memory ordering.
+    cdem, fdem = order_dems
+
+    cfd = topo.FlowObject(cdem)
+    ffd = topo.FlowObject(fdem)
+
+    coutlets = cfd.getoutlets()
+    cog = np.zeros(cfd.shape, dtype=bool)
+    cog[cfd.unravel_index(coutlets)] = True
+
+    foutlets = ffd.getoutlets()
+    fog = np.zeros(ffd.shape, dtype=bool)
+    fog[ffd.unravel_index(foutlets)] = True
+
+    assert np.count_nonzero(cog) > 0
+    assert np.array_equal(cog, fog)
