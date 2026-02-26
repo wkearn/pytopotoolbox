@@ -145,6 +145,7 @@ class StreamObject():
                     avg = (flow.shape[0] + flow.shape[1])//2
                     threshold = np.full(
                         self.shape, math.floor((avg ** 2) * 0.01),
+                        order = self._order,
                         dtype=np.float32)
                 else:
                     threshold = np.full(
