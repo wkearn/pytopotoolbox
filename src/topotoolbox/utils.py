@@ -158,7 +158,7 @@ def read_tif(path: str) -> GridObject:
         grid.path = path
         grid.name = os.path.splitext(os.path.basename(grid.path))[0]
 
-        grid.z = dataset.read(1).astype(np.float32, order='F')
+        grid.z = dataset.read(1).astype(np.float32)
 
         grid.cellsize = dataset.res[0]
         grid.bounds = dataset.bounds
@@ -211,7 +211,7 @@ def gen_random(hillsize: int = 24, rows: int = 128, columns: int = 128,
                "box[opensimplex]\" or \"pip install .[opensimplex]\"")
         raise ImportError(err) from None
 
-    noise_array = np.empty((rows, columns), dtype=np.float32, order='F')
+    noise_array = np.empty((rows, columns), dtype=np.float32)
 
     simplex.seed(seed)
     for y in range(0, rows):
