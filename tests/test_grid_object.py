@@ -303,14 +303,20 @@ def test_erode_order(order_dems):
     assert np.array_equal(ceroded, feroded)
 
 
-def test_evansslope_order(order_dems):
+@pytest.mark.parametrize("modified", [True, False])
+def test_evansslope_order(order_dems, modified):
     cdem, fdem = order_dems
 
-    cslope = cdem.evansslope()
-    fslope = fdem.evansslope()
+    cslope = cdem.evansslope(modified=modified)
+    fslope = fdem.evansslope(modified=modified)
 
     assert np.array_equal(cslope, fslope)
 
+    cx, cy = cdem.evansslope(modified=modified, partial_derivatives=True)
+    fx, fy = fdem.evansslope(modified=modified, partial_derivatives=True)
+
+    assert np.array_equal(cx, fx)
+    assert np.array_equal(cy, fy)
 
 def test_aspect_order(order_dems):
     cdem, fdem = order_dems
