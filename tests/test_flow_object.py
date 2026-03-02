@@ -279,7 +279,7 @@ def test_imposemin_order(order_dems):
 
     assert np.array_equal(cminslope, fminslope)
 
-def test_downstream_distance(order_dems):
+def test_downstream_distance_order(order_dems):
     cdem, fdem = order_dems
 
     cfd = topo.FlowObject(cdem)
@@ -290,7 +290,7 @@ def test_downstream_distance(order_dems):
 
     assert np.array_equal(cd, fd)
 
-def test_upstream_distance(order_dems):
+def test_upstream_distance_order(order_dems):
     cdem, fdem = order_dems
 
     cfd = topo.FlowObject(cdem)
@@ -301,7 +301,7 @@ def test_upstream_distance(order_dems):
 
     assert np.array_equal(cd, fd)
 
-def test_dependence_map(order_dems):
+def test_dependence_map_order(order_dems):
     cdem, fdem = order_dems
     l_c = cdem.duplicate_with_new_data(np.zeros(cdem.shape, dtype = bool, order = 'C'))
     l_f = fdem.duplicate_with_new_data(np.zeros(fdem.shape, dtype = bool, order = 'F'))
@@ -316,7 +316,7 @@ def test_dependence_map(order_dems):
 
     assert np.array_equal(cd, fd)
 
-def test_influence_map(order_dems):
+def test_influence_map_order(order_dems):
     cdem, fdem = order_dems
     l_c = cdem.duplicate_with_new_data(np.zeros(cdem.shape, dtype = bool, order = 'C'))
     l_f = fdem.duplicate_with_new_data(np.zeros(fdem.shape, dtype = bool, order = 'F'))
