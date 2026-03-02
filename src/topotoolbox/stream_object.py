@@ -621,14 +621,17 @@ class StreamObject():
         ax.autoscale_view(scalex=scalex, scaley=scaley)
         return ax
 
-    def plotdz(self, z, ax=None, dunit: str = 'm', doffset: float = 0,
+    def plotdz(self, z, distance=None, ax=None, dunit: str = 'm', doffset: float = 0,
                scalex=True, scaley=True, **kwargs):
         """Plot a node attribute list against upstream distance
 
         Parameters
         ----------
         z: GridObject, np.ndarray
-          The node attribute list that will be plotted
+          The node attribute list that will be plotted on the y axis
+
+        distance: GridObject, np.ndarray
+          The node attribute list that will be plotted on the x axis
 
         ax: matplotlib.axes.Axes, optional
             The axes in which to plot the StreamObject. If no axes are
@@ -672,15 +675,11 @@ class StreamObject():
         if ax is None:
             ax = plt.gca()
         z = self.ezgetnal(z)
-        dist = np.zeros_like(z, dtype=np.float32)
-        a = np.ones_like(z, dtype=np.float32)
 
-        # Compute upstream distance using streamquad_trapz_f32
-        # Another traversal might be more efficient in the future
-        _stream.streamquad_trapz_f32(dist, a,
-                                     self.source,
-                                     self.target,
-                                     self.distance())
+        if distance is None:
+            distance = self.upstream_distance()
+
+        dist = self.ezgetnal(distance)
 
         if dunit == 'km':
             dist /= 1000
