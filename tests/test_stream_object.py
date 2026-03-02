@@ -603,7 +603,7 @@ def test_ksn(wide_dem):
     k = s.ksn(wide_dem, A, theta)
 
 
-def test_streamorder(cfd, ffd, cs, fs):
+def test_streamorder_order(cfd, ffd, cs, fs):
     cds = cs.streamorder()
     fds = fs.streamorder()
 
