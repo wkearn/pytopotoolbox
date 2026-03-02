@@ -320,6 +320,10 @@ def test_aspect_order(order_dems):
 
     assert np.array_equal(caspect, faspect)
 
+    caspect_edges = cdem.aspect(classify=True)
+    faspect_edges = fdem.aspect(classify=True)
+
+    assert np.array_equal(caspect_edges, faspect_edges)
 
 def test_prominence(order_dems):
     cdem, fdem = order_dems
